@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WCAG Contrast Auditor - Professional Accessibility Testing Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .contrast-checker {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .color-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .color-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .color-picker {
+            width: 60px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .color-text {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+        }
+        
+        .result-panel {
+            grid-column: span 2;
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .contrast-ratio {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .compliance-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .badge.pass {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .badge.fail {
+            background: #f56565;
+            color: white;
+        }
+        
+        .support-section {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            color: #2d3748;
+        }
+        
+
+        
+        .donation-card {
+            background: rgba(255,255,255,0.9);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #ff813f;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .contrast-checker {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .color-input {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 WCAG Contrast Auditor</h1>
+            <p>Professional Accessibility Testing Tool</p>
+        </div>
+        
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #2d3748;">Color Contrast Checker</h2>
+            <div class="contrast-checker">
+                <div class="color-input-group">
+                    <h3>Foreground Color</h3>
+                    <div class="color-input">
+                        <input type="color" id="fgColor" class="color-picker" value="#000000">
+                        <input type="text" id="fgText" class="color-text" value="#000000" placeholder="#000000">
+                    </div>
+                </div>
+                
+                <div class="color-input-group">
+                    <h3>Background Color</h3>
+                    <div class="color-input">
+                        <input type="color" id="bgColor" class="color-picker" value="#ffffff">
+                        <input type="text" id="bgText" class="color-text" value="#ffffff" placeholder="#ffffff">
+                    </div>
+                </div>
+                
+                <div class="result-panel">
+                    <div class="contrast-ratio" id="contrastRatio">21:1</div>
+                    <div class="compliance-badges" id="complianceBadges">
+                        <span class="badge pass">✓ WCAG AA Normal</span>
+                        <span class="badge pass">✓ WCAG AA Large</span>
+                        <span class="badge pass">✓ WCAG AAA Normal</span>
+                        <span class="badge pass">✓ WCAG AAA Large</span>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px;">
+                        <div id="previewText" style="color: #000000; background: #ffffff; padding: 15px; border-radius: 4px; font-size: 18px;">
+                            Sample text preview
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card support-section">
+            <h2 style="text-align: center; margin-bottom: 20px;">💰 Support This Project</h2>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 30px;">
+                Help keep this accessibility tool free and continuously improving!
+            </p>
+            
+            <div style="text-align: center;">
+                <div class="donation-card" style="max-width: 400px; margin: 0 auto;">
+                    <h3>☕ Buy Me a Coffee</h3>
+                    <p style="margin-bottom: 20px;">Support this free accessibility tool and help keep it running!</p>
+                    <a href="https://buymeacoffee.com/nikmai111" target="_blank" class="btn" style="font-size: 18px; padding: 15px 30px;">
+                        ☕ Buy Me a Coffee
+                    </a>
+                    <p style="margin-top: 15px; font-size: 14px; opacity: 0.8;">
+                        Every coffee helps improve web accessibility! ☕️❤️
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Made with ❤️ for web accessibility</p>
+            <p>Help make the web more inclusive, one color at a time! 🌈</p>
+        </div>
+    </div>
+    
+    <script>
+        // Contrast calculation functions
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+        
+        function getLuminance(r, g, b) {
+            const [rs, gs, bs] = [r, g, b].map(c => {
+                c = c / 255;
+                return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+        }
+        
+        function getContrastRatio(color1, color2) {
+            const rgb1 = hexToRgb(color1);
+            const rgb2 = hexToRgb(color2);
+            
+            if (!rgb1 || !rgb2) return 1;
+            
+            const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+            const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+            
+            const brightest = Math.max(lum1, lum2);
+            const darkest = Math.min(lum1, lum2);
+            
+            return (brightest + 0.05) / (darkest + 0.05);
+        }
+        
+        function updateContrast() {
+            const fgColor = document.getElementById('fgColor').value;
+            const bgColor = document.getElementById('bgColor').value;
+            
+            document.getElementById('fgText').value = fgColor;
+            document.getElementById('bgText').value = bgColor;
+            
+            const ratio = getContrastRatio(fgColor, bgColor);
+            const ratioText = ratio.toFixed(2) + ':1';
+            
+            document.getElementById('contrastRatio').textContent = ratioText;
+            document.getElementById('previewText').style.color = fgColor;
+            document.getElementById('previewText').style.background = bgColor;
+            
+            // Update compliance badges
+            const badges = document.getElementById('complianceBadges');
+            badges.innerHTML = `
+                <span class="badge ${ratio >= 4.5 ? 'pass' : 'fail'}">${ratio >= 4.5 ? '✓' : '✗'} WCAG AA Normal</span>
+                <span class="badge ${ratio >= 3 ? 'pass' : 'fail'}">${ratio >= 3 ? '✓' : '✗'} WCAG AA Large</span>
+                <span class="badge ${ratio >= 7 ? 'pass' : 'fail'}">${ratio >= 7 ? '✓' : '✗'} WCAG AAA Normal</span>
+                <span class="badge ${ratio >= 4.5 ? 'pass' : 'fail'}">${ratio >= 4.5 ? '✓' : '✗'} WCAG AAA Large</span>
+            `;
+        }
+        
+        function syncColorInputs(colorPicker, textInput) {
+            colorPicker.addEventListener('input', () => {
+                textInput.value = colorPicker.value;
+                updateContrast();
+            });
+            
+            textInput.addEventListener('input', () => {
+                if (/^#[0-9A-F]{6}$/i.test(textInput.value)) {
+                    colorPicker.value = textInput.value;
+                    updateContrast();
+                }
+            });
+        }
+        
+        // Initialize
+        syncColorInputs(document.getElementById('fgColor'), document.getElementById('fgText'));
+        syncColorInputs(document.getElementById('bgColor'), document.getElementById('bgText'));
+        updateContrast();
+    </script>
+</body>
+</html>
