@@ -24,6 +24,23 @@
             --gradient-bg: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
         }
 
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent-primary: #00a693;
+            --accent-secondary: #e74c3c;
+            --accent-warning: #f39c12;
+            --border-color: #e1e5e9;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.15);
+            --gradient-primary: linear-gradient(135deg, #00a693 0%, #008a7a 100%);
+            --gradient-bg: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -478,7 +495,9 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#support">Support</a></li>
                 </ul>
-                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span>
+                </button>
             </div>
         </div>
     </nav>
@@ -651,14 +670,45 @@
         }
 
         function toggleTheme() {
-            // Theme toggle functionality can be added here
-            console.log('Theme toggle clicked');
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'light') {
+                // Switch to dark theme
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                // Switch to light theme
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme on page load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'light') {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '🌙';
+            }
         }
 
         // Initialize
-        syncColorInputs(document.getElementById('fgColor'), document.getElementById('fgText'));
-        syncColorInputs(document.getElementById('bgColor'), document.getElementById('bgText'));
-        updateContrast();
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme(); // Load saved theme first
+            syncColorInputs(document.getElementById('fgColor'), document.getElementById('fgText'));
+            syncColorInputs(document.getElementById('bgColor'), document.getElementById('bgText'));
+            updateContrast();
+        });
 
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
