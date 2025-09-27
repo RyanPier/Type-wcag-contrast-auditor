@@ -1,355 +1,575 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WCAG Contrast Auditor - Professional Accessibility Testing Tool</title>
+    <title>ColorCheck Pro - WCAG Contrast Auditor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --accent-primary: #00d4aa;
+            --accent-secondary: #ff6b6b;
+            --accent-warning: #ffd93d;
+            --border-color: #333333;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --gradient-primary: linear-gradient(135deg, #00d4aa 0%, #00a693 100%);
+            --gradient-bg: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-primary);
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
         }
-        
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 15px 0;
         }
-        
-        .header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .contrast-checker {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .color-input-group {
+
+        .nav-content {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .color-input {
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
         }
-        
-        .color-picker {
-            width: 60px;
-            height: 40px;
-            border: none;
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
             border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
-        
-        .color-text {
-            flex: 1;
-            padding: 10px 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
         }
-        
-        .result-panel {
-            grid-column: span 2;
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
             text-align: center;
-            padding: 30px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 12px;
-            margin-top: 20px;
         }
-        
-        .contrast-ratio {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #2d3748;
-            margin-bottom: 15px;
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
-        .compliance-badges {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        
-        .badge {
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             padding: 8px 16px;
             border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
         }
-        
-        .badge.pass {
-            background: #48bb78;
-            color: white;
-        }
-        
-        .badge.fail {
-            background: #f56565;
-            color: white;
-        }
-        
-        .support-section {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
-            color: #2d3748;
-        }
-        
 
-        
-        .donation-card {
-            background: rgba(255,255,255,0.9);
-            padding: 25px;
+        /* Main Tool Section */
+        .tool-section {
+            padding: 60px 0;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-5px);
+        }
+
+        .tool-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .tool-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .tool-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Color Inputs */
+        .color-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .color-group {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .color-group:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .color-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .color-picker {
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--border-color);
             border-radius: 12px;
-            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #ff813f;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: transform 0.2s;
-            margin: 10px;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
 
-        
-        .footer {
-            text-align: center;
-            color: white;
-            margin-top: 40px;
-            opacity: 0.8;
+        .color-picker:hover {
+            border-color: var(--accent-primary);
+            transform: scale(1.05);
         }
-        
+
+        .color-text {
+            flex: 1;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            color: var(--text-primary);
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .color-text:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+
+        /* Results Section */
+        .results-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .contrast-display {
+            margin-bottom: 30px;
+        }
+
+        .contrast-ratio {
+            font-size: 4rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .contrast-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .compliance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .compliance-badge {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .compliance-badge.pass {
+            border-color: var(--accent-primary);
+            background: rgba(0, 212, 170, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .compliance-badge.fail {
+            border-color: var(--accent-secondary);
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--accent-secondary);
+        }
+
+        .preview-section {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .preview-text {
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Support Section */
+        .support-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .support-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .support-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .coffee-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-primary);
+            color: var(--bg-primary);
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .coffee-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .coffee-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 0 40px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 80px;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .footer-heart {
+            color: var(--accent-secondary);
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .container {
-                padding: 10px;
+                padding: 0 15px;
             }
-            
-            .contrast-checker {
-                grid-template-columns: 1fr;
-                gap: 20px;
+
+            .nav-links {
+                display: none;
             }
-            
-            .header h1 {
+
+            .hero-title {
                 font-size: 2.5rem;
-                margin-bottom: 15px;
             }
-            
-            .header p {
-                font-size: 1rem;
+
+            .hero-subtitle {
+                font-size: 1.1rem;
             }
-            
-            .card {
-                padding: 20px;
-                margin-bottom: 20px;
+
+            .color-section {
+                grid-template-columns: 1fr;
+                gap: 25px;
             }
-            
-            .color-input {
+
+            .color-input-wrapper {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 10px;
             }
-            
+
             .color-picker {
                 width: 100%;
-                height: 50px;
+                height: 60px;
             }
-            
-            .color-text {
-                font-size: 18px;
-                padding: 15px;
-                text-align: center;
+
+            .tool-card {
+                padding: 25px;
             }
-            
-            .result-panel {
-                padding: 20px;
-                margin-top: 15px;
+
+            .results-section {
+                padding: 25px;
             }
-            
+
             .contrast-ratio {
                 font-size: 2.5rem;
-                margin-bottom: 10px;
             }
-            
-            .compliance-badges {
-                flex-direction: column;
-                gap: 8px;
-                align-items: center;
-            }
-            
-            .badge {
-                width: 100%;
-                max-width: 200px;
-                text-align: center;
-                padding: 10px 16px;
-            }
-            
-            .donation-card {
-                padding: 20px;
-                margin: 0 auto;
-                max-width: 100%;
-            }
-            
-            .btn {
-                display: block;
-                width: 100%;
-                max-width: 280px;
-                margin: 15px auto;
-                padding: 15px 20px;
-                font-size: 16px;
-                text-align: center;
-            }
-            
-            .support-section h2 {
-                font-size: 1.8rem;
-                margin-bottom: 15px;
-            }
-            
-            .support-section p {
-                font-size: 1rem;
-                margin-bottom: 20px;
+
+            .compliance-grid {
+                grid-template-columns: 1fr;
             }
         }
-        
+
         @media (max-width: 480px) {
-            .header h1 {
+            .hero-title {
                 font-size: 2rem;
             }
-            
+
+            .tool-title {
+                font-size: 1.5rem;
+            }
+
             .contrast-ratio {
                 font-size: 2rem;
             }
-            
-            .color-input-group h3 {
-                font-size: 1.1rem;
-                margin-bottom: 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-            
-            .card {
-                padding: 15px;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
-            
-            .result-panel {
-                padding: 15px;
-            }
+        }
+
+        .tool-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .support-section {
+            animation: fadeInUp 0.6s ease-out 0.2s both;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🎨 WCAG Contrast Auditor</h1>
-            <p>Professional Accessibility Testing Tool</p>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">ColorCheck Pro</div>
+                <ul class="nav-links">
+                    <li><a href="#tool">Tool</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#support">Support</a></li>
+                </ul>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            </div>
         </div>
-        
-        <div class="card">
-            <h2 style="margin-bottom: 20px; color: #2d3748;">Color Contrast Checker</h2>
-            <div class="contrast-checker">
-                <div class="color-input-group">
-                    <h3>Foreground Color</h3>
-                    <div class="color-input">
-                        <input type="color" id="fgColor" class="color-picker" value="#000000">
-                        <input type="text" id="fgText" class="color-text" value="#000000" placeholder="#000000">
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">✨ Professional Accessibility Testing</div>
+            <h1 class="hero-title">WCAG Contrast Auditor</h1>
+            <p class="hero-subtitle">
+                Ensure your designs meet accessibility standards with our professional-grade 
+                color contrast checker. Built for designers, developers, and accessibility experts.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Tool -->
+    <section class="tool-section" id="tool">
+        <div class="container">
+            <div class="tool-card">
+                <div class="tool-header">
+                    <h2 class="tool-title">Color Contrast Checker</h2>
+                    <p class="tool-description">
+                        Test color combinations against WCAG 2.1 guidelines for optimal accessibility
+                    </p>
+                </div>
+
+                <div class="color-section">
+                    <div class="color-group">
+                        <div class="color-label">Foreground Color</div>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="fgColor" class="color-picker" value="#000000">
+                            <input type="text" id="fgText" class="color-text" value="#000000" placeholder="#000000">
+                        </div>
+                    </div>
+
+                    <div class="color-group">
+                        <div class="color-label">Background Color</div>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="bgColor" class="color-picker" value="#ffffff">
+                            <input type="text" id="bgText" class="color-text" value="#ffffff" placeholder="#ffffff">
+                        </div>
                     </div>
                 </div>
-                
-                <div class="color-input-group">
-                    <h3>Background Color</h3>
-                    <div class="color-input">
-                        <input type="color" id="bgColor" class="color-picker" value="#ffffff">
-                        <input type="text" id="bgText" class="color-text" value="#ffffff" placeholder="#ffffff">
+
+                <div class="results-section">
+                    <div class="contrast-display">
+                        <div class="contrast-ratio" id="contrastRatio">21:1</div>
+                        <div class="contrast-label">Contrast Ratio</div>
                     </div>
-                </div>
-                
-                <div class="result-panel">
-                    <div class="contrast-ratio" id="contrastRatio">21:1</div>
-                    <div class="compliance-badges" id="complianceBadges">
-                        <span class="badge pass">✓ WCAG AA Normal</span>
-                        <span class="badge pass">✓ WCAG AA Large</span>
-                        <span class="badge pass">✓ WCAG AAA Normal</span>
-                        <span class="badge pass">✓ WCAG AAA Large</span>
+
+                    <div class="compliance-grid" id="complianceGrid">
+                        <div class="compliance-badge pass">✓ WCAG AA Normal Text</div>
+                        <div class="compliance-badge pass">✓ WCAG AA Large Text</div>
+                        <div class="compliance-badge pass">✓ WCAG AAA Normal Text</div>
+                        <div class="compliance-badge pass">✓ WCAG AAA Large Text</div>
                     </div>
-                    <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px;">
-                        <div id="previewText" style="color: #000000; background: #ffffff; padding: 15px; border-radius: 4px; font-size: 18px;">
-                            Sample text preview
+
+                    <div class="preview-section">
+                        <div class="preview-text" id="previewText" style="color: #000000; background: #ffffff;">
+                            Sample text preview - How readable is this combination?
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="card support-section">
-            <h2 style="text-align: center; margin-bottom: 20px;">💰 Support This Project</h2>
-            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 30px;">
-                Help keep this accessibility tool free and continuously improving!
+    </section>
+
+    <!-- Support Section -->
+    <section class="support-section" id="support">
+        <div class="container">
+            <h2 class="support-title">Support This Project</h2>
+            <p class="support-description">
+                Help keep this accessibility tool free and continuously improving. 
+                Every contribution helps make the web more inclusive!
             </p>
-            
-            <div style="text-align: center;">
-                <div class="donation-card" style="max-width: 400px; margin: 0 auto;">
-                    <h3>☕ Buy Me a Coffee</h3>
-                    <p style="margin-bottom: 20px;">Support this free accessibility tool and help keep it running!</p>
-                    <a href="https://buymeacoffee.com/nikmai111" target="_blank" class="btn" style="font-size: 18px; padding: 15px 30px;">
-                        ☕ Buy Me a Coffee
-                    </a>
-                    <p style="margin-top: 15px; font-size: 14px; opacity: 0.8;">
-                        Every coffee helps improve web accessibility! ☕️❤️
-                    </p>
-                </div>
-            </div>
+            <a href="https://buymeacoffee.com/nikmai111" target="_blank" class="coffee-btn">
+                <span class="coffee-icon">☕</span>
+                Buy Me a Coffee
+            </a>
         </div>
-        
-        <div class="footer">
-            <p>Made with ❤️ for web accessibility</p>
-            <p>Help make the web more inclusive, one color at a time! 🌈</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">Made with <span class="footer-heart">♥</span> for web accessibility</p>
+            <p class="footer-text">Help make the web more inclusive, one color at a time</p>
         </div>
-    </div>
-    
+    </footer>
+
     <script>
         // Contrast calculation functions
         function hexToRgb(hex) {
@@ -360,7 +580,7 @@
                 b: parseInt(result[3], 16)
             } : null;
         }
-        
+
         function getLuminance(r, g, b) {
             const [rs, gs, bs] = [r, g, b].map(c => {
                 c = c / 255;
@@ -368,7 +588,7 @@
             });
             return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
         }
-        
+
         function getContrastRatio(color1, color2) {
             const rgb1 = hexToRgb(color1);
             const rgb2 = hexToRgb(color2);
@@ -383,7 +603,7 @@
             
             return (brightest + 0.05) / (darkest + 0.05);
         }
-        
+
         function updateContrast() {
             const fgColor = document.getElementById('fgColor').value;
             const bgColor = document.getElementById('bgColor').value;
@@ -399,15 +619,23 @@
             document.getElementById('previewText').style.background = bgColor;
             
             // Update compliance badges
-            const badges = document.getElementById('complianceBadges');
-            badges.innerHTML = `
-                <span class="badge ${ratio >= 4.5 ? 'pass' : 'fail'}">${ratio >= 4.5 ? '✓' : '✗'} WCAG AA Normal</span>
-                <span class="badge ${ratio >= 3 ? 'pass' : 'fail'}">${ratio >= 3 ? '✓' : '✗'} WCAG AA Large</span>
-                <span class="badge ${ratio >= 7 ? 'pass' : 'fail'}">${ratio >= 7 ? '✓' : '✗'} WCAG AAA Normal</span>
-                <span class="badge ${ratio >= 4.5 ? 'pass' : 'fail'}">${ratio >= 4.5 ? '✓' : '✗'} WCAG AAA Large</span>
+            const grid = document.getElementById('complianceGrid');
+            grid.innerHTML = `
+                <div class="compliance-badge ${ratio >= 4.5 ? 'pass' : 'fail'}">
+                    ${ratio >= 4.5 ? '✓' : '✗'} WCAG AA Normal Text
+                </div>
+                <div class="compliance-badge ${ratio >= 3 ? 'pass' : 'fail'}">
+                    ${ratio >= 3 ? '✓' : '✗'} WCAG AA Large Text
+                </div>
+                <div class="compliance-badge ${ratio >= 7 ? 'pass' : 'fail'}">
+                    ${ratio >= 7 ? '✓' : '✗'} WCAG AAA Normal Text
+                </div>
+                <div class="compliance-badge ${ratio >= 4.5 ? 'pass' : 'fail'}">
+                    ${ratio >= 4.5 ? '✓' : '✗'} WCAG AAA Large Text
+                </div>
             `;
         }
-        
+
         function syncColorInputs(colorPicker, textInput) {
             colorPicker.addEventListener('input', () => {
                 textInput.value = colorPicker.value;
@@ -421,11 +649,30 @@
                 }
             });
         }
-        
+
+        function toggleTheme() {
+            // Theme toggle functionality can be added here
+            console.log('Theme toggle clicked');
+        }
+
         // Initialize
         syncColorInputs(document.getElementById('fgColor'), document.getElementById('fgText'));
         syncColorInputs(document.getElementById('bgColor'), document.getElementById('bgText'));
         updateContrast();
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
